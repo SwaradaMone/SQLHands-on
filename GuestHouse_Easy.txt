@@ -1,0 +1,106 @@
+Guest House Assessment Easy
+
+1.Guest 1183. Give the booking_date and the number of nights for guest 1183.
+
+select booking_date, nights from booking where guest_id=1183
+
++--------------+--------+
+| booking_date | nights |
++--------------+--------+
+| 2016-11-27   |      5 |
++--------------+--------+
+Result:
+booking_date	nights
+2016-11-27T00:00:00	5
+
+2.When do they get here? List the arrival time and the first and last names for all guests due to arrive on 2016-11-05,
+ order the output by time of arrival.
+
+select booking.arrival_time,guest.first_name,guest.last_name from booking,guest 
+where booking_date='2016-11-05' and booking.guest_id=guest.id order by booking.arrival_time
+
++--------------+------------+-----------+
+| arrival_time | first_name | last_name |
++--------------+------------+-----------+
+| 14:00        | Lisa       | Nandy     |
+| 15:00        | Jack       | Dromey    |
+| 16:00        | Mr Andrew  | Tyrie     |
+| 21:00        | James      | Heappey   |
+| 22:00        | Justin     | Tomlinson |
++--------------+------------+-----------+
+Result:
+arrival_time	first_name	last_name
+14:00	Lisa	Nandy
+15:00	Jack	Dromey
+16:00	Mr Andrew	Tyrie
+21:00	James	Heappey
+22:00	Justin	Tomlinson
+
+
+3.Look up daily rates. Give the daily rate that should be paid for bookings with ids 5152, 5165, 5154 and 5295. 
+Include booking id, room type, number of occupants and the amount.
+
+select booking.booking_id,booking.room_type_requested,booking.occupants,rate.amount from booking 
+join rate on(booking.occupants=rate.occupancy and booking.room_type_requested=rate.room_type)
+where booking.booking_id=5152 or booking.booking_id=5165 or booking.booking_id=5154 or booking.booking_id=5295
+
++------------+---------------------+-----------+--------+
+| booking_id | room_type_requested | occupants | amount |
++------------+---------------------+-----------+--------+
+|       5152 | double              |         2 |  72.00 |
+|       5154 | double              |         1 |  56.00 |
+|       5295 | family              |         3 |  84.00 |
++------------+---------------------+-----------+--------+
+Result:
+booking_id	room_type_req..	occupants	amount
+5152	double	2	72
+5154	double	1	56
+5295	family	3	84
+
+
+4.
+Who’s in 101? Find who is staying in room 101 on 2016-12-03, include first name, last name and address.
+
+select guest.first_name, guest.last_name, guest.address
+from 
+guest join booking on (booking.guest_id = guest.id )
+ where 
+booking.booking_date='2016-12-03' and booking.room_no=101 
+
++------------+-----------+-------------+
+| first_name | last_name | address     |
++------------+-----------+-------------+
+| Graham     | Evans     | Weaver Vale |
++------------+-----------+-------------+
+Result:
+first_name	last_name	address
+Graham	Evans	Weaver Vale
+
+
+5.How many bookings, how many nights? For guests 1185 and 1270 show the number of bookings made 
+and the total number of nights. Your output should include the guest id and the total number
+ of bookings and the total number of nights.
+
+SELECT
+	guest_id,
+	COUNT(nights),
+	sum(nights)
+FROM
+	booking
+WHERE
+	guest_id = 1185
+	OR guest_id = 1270
+GROUP BY
+	guest_id;
+
+Submit SQLRestore default
++----------+---------------+-------------+
+| guest_id | COUNT(nights) | SUM(nights) |
++----------+---------------+-------------+
+|     1185 |             3 |           8 |
+|     1270 |             2 |           3 |
++----------+---------------+-------------+
+Result:
+guest_id		
+1185	3	8
+1270	2	3
